@@ -133,22 +133,20 @@ if __name__ == "__main__":
     data = client.query(sql).to_dataframe()
 
     # Check Total Number of Duplicate Records
-    duplicated = data.duplicated(subset=['City','Latitude', 'Longitude',
+    duplicated = data.duplicated(subset=['City'
        'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
        'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
        'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
        'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
-       'Snow_1h', 'Snow_3h', 'Country_Code', 'Sunrise_Time', 'Sunset_Time',
-       'Timezone', 'City_ID', 'City_Name']).sum()
+       'Snow_1h', 'Snow_3h']).sum()
     
     # Remove Duplicate Records
-    data.drop_duplicates(subset=['City','Latitude', 'Longitude',
+    data.drop_duplicates(subset=['City',
        'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
        'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
        'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
        'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
-       'Snow_1h', 'Snow_3h', 'Country_Code', 'Sunrise_Time', 'Sunset_Time',
-       'Timezone', 'City_ID', 'City_Name'],inplace=True)
+       'Snow_1h', 'Snow_3h'],inplace=True)
 
     # Load the data into the BigQuery table
     job = client.load_table_from_dataframe(data, table_id)
