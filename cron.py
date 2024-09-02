@@ -132,6 +132,10 @@ if __name__ == "__main__":
     # Run SQL Query
     data = client.query(sql).to_dataframe()
 
+    # Delete Original Table
+    client.delete_table(table_id)
+    print(f"Table deleted successfully.")
+
     # Check Total Number of Duplicate Records
     duplicated = data.duplicated(subset=['City',
        'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
@@ -147,6 +151,59 @@ if __name__ == "__main__":
        'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
        'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
        'Snow_1h', 'Snow_3h'],inplace=True)
+
+    # Define the dataset ID and table ID
+    dataset_id = 'central_database'
+    table_id = 'openweathermap'
+    
+    # Define the table schema
+    schema = [
+        bigquery.SchemaField("City", "STRING"),
+        bigquery.SchemaField("Time_of_Data_Calculation", "TIMESTAMP"),
+        bigquery.SchemaField("Latitude", "FLOAT64"),
+        bigquery.SchemaField("Longitude", "FLOAT64"),
+        bigquery.SchemaField("Weather_ID", "INT64"),
+        bigquery.SchemaField("Weather_Main", "STRING"),
+        bigquery.SchemaField("Weather_Description", "STRING"),
+        bigquery.SchemaField("Temperature", "FLOAT64"),
+        bigquery.SchemaField("Feels_Like", "FLOAT64"),
+        bigquery.SchemaField("Temp_Min", "FLOAT64"),
+        bigquery.SchemaField("Temp_Max", "FLOAT64"),
+        bigquery.SchemaField("Pressure", "FLOAT64"),
+        bigquery.SchemaField("Humidity", "INT64"),
+        bigquery.SchemaField("Sea_Level", "FLOAT64"),
+        bigquery.SchemaField("Ground_Level", "FLOAT64"),
+        bigquery.SchemaField("Visibility", "INT64"),
+        bigquery.SchemaField("Wind_Speed", "FLOAT64"),
+        bigquery.SchemaField("Wind_Degree", "FLOAT64"),
+        bigquery.SchemaField("Wind_Gust", "FLOAT64"),
+        bigquery.SchemaField("Cloudiness", "INT64"),
+        bigquery.SchemaField("Cloudiness_Name", "STRING"),
+        bigquery.SchemaField("Rain_1h", "FLOAT64"),
+        bigquery.SchemaField("Rain_3h", "FLOAT64"),
+        bigquery.SchemaField("Snow_1h", "FLOAT64"),
+        bigquery.SchemaField("Snow_3h", "FLOAT64"),
+        bigquery.SchemaField("Country_Code", "STRING"),
+        bigquery.SchemaField("Sunrise_Time", "TIMESTAMP"),
+        bigquery.SchemaField("Sunset_Time", "TIMESTAMP"),
+        bigquery.SchemaField("Timezone", "INT64"),
+        bigquery.SchemaField("City_ID", "INT64"),
+        bigquery.SchemaField("City_Name", "STRING"),
+    ]
+    
+    # Define the table reference
+    table_ref = client.dataset(dataset_id).table(table_id)
+    
+    # Create the table object
+    table = bigquery.Table(table_ref, schema=schema)
+    
+    # Create the table in BigQuery
+    table = client.create_table(table)
+    
+    print(f"Table {table.table_id} created successfully.")
+
+    # Define the BigQuery table ID
+    table_id = 'project-adrian-julius-aluoch.central_database.openweathermap'
 
     # Load the data into the BigQuery table
     job = client.load_table_from_dataframe(data, table_id)
