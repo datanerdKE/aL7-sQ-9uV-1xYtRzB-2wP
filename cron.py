@@ -123,7 +123,7 @@ if __name__ == "__main__":
         job.reload()
         print(job.state)
 
-    # Define SQL Query to Retrieve Real Estate Data from Google Cloud BigQuery
+    # Define SQL Query to Retrieve Open Weather Data from Google Cloud BigQuery
     sql = (
            'SELECT *'
            'FROM `central_database.openweathermap`'
