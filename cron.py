@@ -133,7 +133,7 @@ if __name__ == "__main__":
     data = client.query(sql).to_dataframe()
 
     # Check Total Number of Duplicate Records
-    duplicated = data.duplicated(subset=['City'
+    duplicated = data.duplicated(subset=['City',
        'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
        'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
        'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
