@@ -123,4 +123,40 @@ if __name__ == "__main__":
         job.reload()
         print(job.state)
 
+    # Define SQL Query to Retrieve Real Estate Data from Google Cloud BigQuery
+    sql = (
+           'SELECT *'
+           'FROM `central_database.openweathermap`'
+           )
+    
+    # Run SQL Query
+    data = client.query(sql).to_dataframe()
+
+    # Check Total Number of Duplicate Records
+    duplicated = data.duplicated(subset=['City','Latitude', 'Longitude',
+       'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
+       'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
+       'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
+       'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
+       'Snow_1h', 'Snow_3h', 'Country_Code', 'Sunrise_Time', 'Sunset_Time',
+       'Timezone', 'City_ID', 'City_Name']).sum()
+    
+    # Remove Duplicate Records
+    data.drop_duplicates(subset=['City','Latitude', 'Longitude',
+       'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
+       'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
+       'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
+       'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
+       'Snow_1h', 'Snow_3h', 'Country_Code', 'Sunrise_Time', 'Sunset_Time',
+       'Timezone', 'City_ID', 'City_Name'],inplace=True)
+
+    # Load the data into the BigQuery table
+    job = client.load_table_from_dataframe(data, table_id)
+
+    # Wait for the job to complete
+    while job.state != 'DONE':
+        time.sleep(2)
+        job.reload()
+        print(job.state)
+
     print("Data has been successfully retrieved, saved, and appended to the BigQuery table.")
