@@ -69,8 +69,6 @@ def get_weather(api_key, location):
                 'Cloudiness_Name': get_xml_text(xml_root, 'clouds', 'name'),
                 'Rain_1h': data.get('rain', {}).get('1h'),
                 'Rain_3h': data.get('rain', {}).get('3h'),
-                'Snow_1h': data.get('snow', {}).get('1h'),
-                'Snow_3h': data.get('snow', {}).get('3h'),
                 'Country_Code': data['sys']['country'],
                 'Sunrise_Time': pd.to_datetime(data['sys']['sunrise'], unit='s', utc=True),
                 'Sunset_Time': pd.to_datetime(data['sys']['sunset'], unit='s', utc=True),
@@ -141,16 +139,14 @@ if __name__ == "__main__":
        'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
        'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
        'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
-       'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
-       'Snow_1h', 'Snow_3h']).sum()
+       'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h']).sum()
     
     # Remove Duplicate Records
     data.drop_duplicates(subset=['City',
        'Weather_ID', 'Weather_Main', 'Weather_Description', 'Temperature',
        'Feels_Like', 'Temp_Min', 'Temp_Max', 'Pressure', 'Humidity',
        'Sea_Level', 'Ground_Level', 'Visibility', 'Wind_Speed', 'Wind_Degree',
-       'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h',
-       'Snow_1h', 'Snow_3h'],inplace=True)
+       'Wind_Gust', 'Cloudiness', 'Cloudiness_Name', 'Rain_1h', 'Rain_3h'],inplace=True)
 
     # Define the dataset ID and table ID
     dataset_id = 'central_database'
@@ -181,8 +177,6 @@ if __name__ == "__main__":
         bigquery.SchemaField("Cloudiness_Name", "STRING"),
         bigquery.SchemaField("Rain_1h", "FLOAT64"),
         bigquery.SchemaField("Rain_3h", "FLOAT64"),
-        bigquery.SchemaField("Snow_1h", "FLOAT64"),
-        bigquery.SchemaField("Snow_3h", "FLOAT64"),
         bigquery.SchemaField("Country_Code", "STRING"),
         bigquery.SchemaField("Sunrise_Time", "TIMESTAMP"),
         bigquery.SchemaField("Sunset_Time", "TIMESTAMP"),
